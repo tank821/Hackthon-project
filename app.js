@@ -101,6 +101,11 @@ app.post('/upload2', upload.single('file'),  async (req, res) => {
 app.get('/', async (req, res)=>{
     res.render('index', {data:[]});
 });
+// INTENTIONAL BUG (for webhook/code-review testing): references an undefined
+// variable `count`, so this endpoint throws a ReferenceError on every request.
+app.get('/health', async (req, res) => {
+    res.status(200).json({ status: 'ok', uptime: count });
+});
 app.get('/openai', async (req, res) => {
     try {
         const result = await uploadToOpenai();
