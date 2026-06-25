@@ -17,10 +17,10 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
 router.get('/search', (req, res) => {
     const username = req.query.username;
 
-    // Direct string concatenation in SQL query
-    const query = `SELECT * FROM users WHERE username = '${username}'`;
+    // Using parameterized query to prevent SQL injection
+    const query = `SELECT * FROM users WHERE username = ?`;
 
-    db.all(query, [], (err, rows) => {
+    db.all(query, [username], (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }

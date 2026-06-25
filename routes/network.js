@@ -10,7 +10,12 @@ router.get('/ping', (req, res) => {
         return res.status(400).json({ error: 'Host parameter is required' });
     }
 
-    // Command injection vulnerability: unsanitized user input in shell command
+    // Validate host to prevent command injection
+    const hostPattern = /^[a-zA-Z0-9._-]+$/;
+    if (!hostPattern.test(host)) {
+        return res.status(400).json({ error: 'Invalid host format' });
+    }
+
     exec(`ping -c 3 ${host}`, (error, stdout, stderr) => {
         if (error) {
             return res.status(500).json({ error: stderr || error.message });
