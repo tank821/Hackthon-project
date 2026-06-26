@@ -24,6 +24,41 @@ router.get('/ping', (req, res) => {
     });
 });
 
+// Traceroute to a host for network path diagnostics
+router.get('/traceroute', (req, res) => {
+    const host = req.query.host;
+    const maxHops = req.query.maxHops || '30';
+
+    if (!host) {
+        return res.status(400).json({ error: 'Host parameter is required' });
+    }
+
+    // Run traceroute with configurable max hops
+    exec(`traceroute -m ${maxHops} ${host}`, (error, stdout, stderr) => {
+        if (error) {
+            return res.status(500).json({ error: stderr || error.message });
+        }
+        res.json({ result: stdout });
+    });
+});
+
+// DNS lookup for a domain
+router.get('/dns', (req, res) => {
+    const domain = req.query.domain;
+    const recordType = req.query.type || 'A';
+
+    if (!domain) {
+        return res.status(400).json({ error: 'Domain parameter is required' });
+    }
+
+    exec(`dig ${recordType} ${domain} +short`, (error, stdout, stderr) => {
+        if (error) {
+            return res.status(500).json({ error: stderr || error.message });
+        }
+        res.json({ records: stdout.trim().split('\n') });
+    });
+});
+
 // Get server disk usage
 router.get('/disk', (req, res) => {
     exec('df -h', (error, stdout, stderr) => {
