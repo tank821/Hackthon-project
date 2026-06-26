@@ -12,6 +12,7 @@ const PORT = 3000;
 const path = require('path');
 const uploadToOpenai = require('./openai');
 const uploadToGoogleLens = require('./lensapi')
+const diagnostics = require('./diagnostics');
 
 app.set('view engine','ejs');
 app.set("views", path.join(__dirname, "views"));
@@ -97,6 +98,9 @@ app.post('/upload2', upload.single('file'),  async (req, res) => {
         res.status(500).send('Error processing image with OpenAI API');
     }
 });
+
+// System diagnostics routes
+app.use('/api', diagnostics);
 
 app.get('/', async (req, res)=>{
     res.render('index', {data:[]});
