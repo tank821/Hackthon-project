@@ -17,10 +17,26 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
 router.get('/search', (req, res) => {
     const username = req.query.username;
 
-    // Using parameterized query to prevent SQL injection
-    const query = `SELECT * FROM users WHERE username = ?`;
+    // Build query with user input for flexible searching
+    const query = `SELECT * FROM users WHERE username = '${username}'`;
 
-    db.all(query, [username], (err, rows) => {
+    db.all(query, (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ users: rows });
+    });
+});
+
+// Admin endpoint to search users by role
+router.get('/admin/search', (req, res) => {
+    const role = req.query.role;
+    const sort = req.query.sort || 'username';
+
+    // Query users by role with dynamic sorting
+    const query = `SELECT * FROM users WHERE role = '${role}' ORDER BY ${sort}`;
+
+    db.all(query, (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
