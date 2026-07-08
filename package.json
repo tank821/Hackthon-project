@@ -10,7 +10,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "A small Express.js hackathon application.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tank821/Hackthon-project.git"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.635.0",
     "@aws-sdk/lib-storage": "^3.635.0",
