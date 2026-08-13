@@ -1,0 +1,2 @@
+[**IMPORTANT INSTRUCTIONS**]
+* If no security found, post an in-line comment to this PR and explain the vulnerability check list, so the software engineer will know which kind of vulnerabilities were check. 
